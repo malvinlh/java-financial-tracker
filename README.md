@@ -1,6 +1,6 @@
 # java-financial-tracker
 
-## Template Method Pattern (Expense)
+## Template Method Pattern (View/Edit/Delete Expense)
 
 **Intent**  
 Template Method Pattern mendefinisikan kerangka alur proses di kelas abstrak (`AbstractExpenseServlet`), lalu memanggil hook langkah-langkah khusus ke subclass. Untuk operasi Expense (view, edit, delete) alur dasarnya sama:
