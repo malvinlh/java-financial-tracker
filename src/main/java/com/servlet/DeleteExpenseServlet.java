@@ -7,48 +7,53 @@ import javax.servlet.http.*;
 
 import com.dao.ExpenseDao;
 import com.db.HibernateUtil;
+import com.entity.User;
 
-/**
- * Hapus Expense, lalu redirect ke viewExpense.
- */
 @WebServlet("/deleteExpense")
-public class DeleteExpenseServlet extends HttpServlet {
+public class DeleteExpenseServlet extends AbstractExpenseServlet {
     private static final long serialVersionUID = 1L;
+    private Integer expenseId;
 
     @Override
-    protected void doGet(
-            HttpServletRequest req,
-            HttpServletResponse resp
-    ) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-
-        if (session == null || session.getAttribute("loginUser") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        int id;
+    protected void preAction(HttpServletRequest req) {
         try {
-            id = Integer.parseInt(req.getParameter("id"));
-        } catch (NumberFormatException e) {
+            expenseId = Integer.parseInt(req.getParameter("id"));
+        } catch (Exception e) {
+            expenseId = null;
+        }
+    }
+
+    @Override
+    protected void doAction(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        if (expenseId == null) {
             session.setAttribute("msg", "Invalid expense ID");
             session.setAttribute("msgType", "danger");
-            resp.sendRedirect(req.getContextPath() + "/viewExpense");
-            return;
+        } else {
+            boolean ok = dao.deleteExpense(expenseId);
+            session.setAttribute("msg",
+                ok ? "Expense deleted successfully"
+                   : "Failed to delete expense");
+            session.setAttribute("msgType", ok ? "success" : "danger");
         }
+    }
 
-        boolean deleted = new ExpenseDao(
-            HibernateUtil.getSessionFactory()
-        ).deleteExpense(id);
+    @Override
+    protected void dispatch(HttpServletRequest req,
+                            HttpServletResponse resp)
+            throws ServletException, IOException {
+        // 1) Bawa flash dari session → request
+        carryFlash(req);
 
-        session.setAttribute(
-            "msg",
-            deleted
-                ? "Expense deleted successfully"
-                : "Failed to delete expense"
+        // 2) Reload data dan simpan ke request
+        HttpSession session = req.getSession(false);
+        User user = (User) session.getAttribute("loginUser");
+        req.setAttribute("expenses",
+            dao.getAllExpenseByUser(user)
         );
-        session.setAttribute("msgType", deleted ? "success" : "danger");
 
-        resp.sendRedirect(req.getContextPath() + "/viewExpense");
+        // 3) Forward ke JSP view
+        req.getRequestDispatcher("/user/view_expense.jsp")
+           .forward(req, resp);
     }
 }

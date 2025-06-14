@@ -11,45 +11,30 @@ import com.db.HibernateUtil;
 import com.entity.Expense;
 import com.entity.User;
 
-/**
- * Menampilkan daftar Expense milik user.
- */
 @WebServlet("/viewExpense")
-public class ViewExpenseServlet extends HttpServlet {
+public class ViewExpenseServlet extends AbstractExpenseServlet {
     private static final long serialVersionUID = 1L;
+    private List<Expense> expenses;
 
     @Override
-    protected void doGet(
-            HttpServletRequest req,
-            HttpServletResponse resp
-    ) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        User user = (session != null)
-                  ? (User) session.getAttribute("loginUser")
-                  : null;
+    protected void preAction(HttpServletRequest req) {
+        // fetch semua expenses user
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("loginUser");
+        expenses = new ExpenseDao(HibernateUtil.getSessionFactory())
+                       .getAllExpenseByUser(user);
+    }
 
-        // Proteksi
-        if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
-            return;
-        }
+    @Override
+    protected void doAction(HttpServletRequest req) {
+        // untuk view, tidak ada aksi update/delete
+    }
 
-        // Ambil data
-        List<Expense> list = new ExpenseDao(
-            HibernateUtil.getSessionFactory()
-        ).getAllExpenseByUser(user);
-
-        // Pindahkan pesan dari session ke request (jika ada)
-        String msg     = (String) session.getAttribute("msg");
-        String msgType = (String) session.getAttribute("msgType");
-        if (msg != null) {
-            req.setAttribute("msg", msg);
-            req.setAttribute("msgType", msgType);
-            session.removeAttribute("msg");
-            session.removeAttribute("msgType");
-        }
-
-        req.setAttribute("expenses", list);
+    @Override
+    protected void dispatch(HttpServletRequest req,
+                            HttpServletResponse resp)
+            throws ServletException, IOException {
+        req.setAttribute("expenses", expenses);
         req.getRequestDispatcher("/user/view_expense.jsp")
            .forward(req, resp);
     }

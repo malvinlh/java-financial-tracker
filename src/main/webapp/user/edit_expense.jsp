@@ -2,7 +2,8 @@
          pageEncoding="UTF-8"
          isELIgnored="false" %>
 <%@ page import="com.entity.User" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+          prefix="c" %>
 <%
     User loginUser = (User) session.getAttribute("loginUser");
     if (loginUser == null) {
@@ -32,15 +33,15 @@
           <!-- Header + Flash -->
           <div class="card-header text-center">
             <h3>Edit Expense</h3>
-            <c:if test="${not empty sessionScope.msg}">
-              <div class="alert alert-${sessionScope.msgType}
-                          alert-dismissible fade show" role="alert">
-                ${sessionScope.msg}
-                <button type="button" class="btn-close"
+            <c:if test="${not empty msg}">
+              <div class="alert alert-${msgType}
+                          alert-dismissible fade show"
+                   role="alert">
+                ${msg}
+                <button type="button"
+                        class="btn-close"
                         data-bs-dismiss="alert"></button>
               </div>
-              <c:remove var="msg" scope="session"/>
-              <c:remove var="msgType" scope="session"/>
             </c:if>
           </div>
 
@@ -52,36 +53,52 @@
                      value="${expense.id}"/>
 
               <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input id="title" name="title" type="text"
+                <label for="title"
+                       class="form-label">Title</label>
+                <input id="title" name="title"
+                       type="text"
                        class="form-control"
-                       value="${expense.title}" required>
+                       value="${expense.title}"
+                       required>
               </div>
               <div class="mb-3">
-                <label for="date" class="form-label">Date</label>
-                <input id="date" name="date" type="date"
+                <label for="date"
+                       class="form-label">Date</label>
+                <input id="date" name="date"
+                       type="date"
                        class="form-control"
-                       value="${expense.date}" required>
+                       value="${expense.date}"
+                       required>
               </div>
               <div class="mb-3">
-                <label for="time" class="form-label">Time</label>
-                <input id="time" name="time" type="time"
+                <label for="time"
+                       class="form-label">Time</label>
+                <input id="time" name="time"
+                       type="time"
                        class="form-control"
-                       value="${expense.time}" required>
+                       value="${expense.time}"
+                       required>
               </div>
               <div class="mb-3">
                 <label for="description"
                        class="form-label">Description</label>
-                <input id="description" name="description"
-                       type="text" class="form-control"
-                       value="${expense.description}" required>
+                <input id="description"
+                       name="description"
+                       type="text"
+                       class="form-control"
+                       value="${expense.description}"
+                       required>
               </div>
               <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input id="price" name="price"
-                       type="number" step="0.01"
+                <label for="price"
+                       class="form-label">Price</label>
+                <input id="price"
+                       name="price"
+                       type="number"
+                       step="0.01"
                        class="form-control"
-                       value="${expense.price}" required>
+                       value="${expense.price}"
+                       required>
               </div>
 
               <div class="d-flex gap-2">

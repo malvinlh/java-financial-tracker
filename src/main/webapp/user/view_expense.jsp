@@ -27,13 +27,14 @@
 
   <div class="container py-5">
 
-    <!-- Flash message -->
+    <!-- Flash message (dari request) -->
     <c:if test="${not empty msg}">
       <div class="alert alert-${msgType}
                   alert-dismissible fade show"
            role="alert">
         ${msg}
-        <button type="button" class="btn-close"
+        <button type="button"
+                class="btn-close"
                 data-bs-dismiss="alert"></button>
       </div>
     </c:if>
@@ -48,16 +49,20 @@
                         table-striped table-hover mb-0">
             <thead class="table-light">
               <tr>
-                <th>#</th><th>Title</th>
-                <th>Description</th><th>Date</th>
-                <th>Time</th><th>Price</th>
+                <th>#</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Price</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               <c:choose>
                 <c:when test="${not empty requestScope.expenses}">
-                  <c:forEach var="exp" items="${requestScope.expenses}"
+                  <c:forEach var="exp"
+                             items="${requestScope.expenses}"
                              varStatus="st">
                     <tr>
                       <th scope="row">${st.index + 1}</th>
