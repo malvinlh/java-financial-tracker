@@ -6,7 +6,6 @@ import javax.servlet.http.*;
 
 import com.dao.ExpenseDao;
 import com.db.HibernateUtil;
-import com.entity.User;
 
 /**
  * Template Method untuk operasi Expense: proteksi, flash, dispatch.

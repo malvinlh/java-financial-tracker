@@ -5,8 +5,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import com.dao.ExpenseDao;
-import com.db.HibernateUtil;
 import com.entity.Expense;
 import com.entity.User;
 
