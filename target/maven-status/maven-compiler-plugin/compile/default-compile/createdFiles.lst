@@ -11,7 +11,9 @@ com\servlet\DeleteExpenseServlet.class
 com\servlet\SaveIncomeServlet.class
 com\dao\IncomeDao.class
 com\db\HibernateUtil.class
+com\strategy\SaveIncomeStrategy.class
 com\dao\UserDao.class
+com\strategy\HibernateIncomeStrategy.class
 com\dao\ExpenseDao.class
 com\entity\User.class
 com\servlet\ViewExpenseServlet.class
