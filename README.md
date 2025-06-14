@@ -7,44 +7,21 @@ Strategy Pattern memisahkan algoritma penyimpanan (`save`) untuk objek `Income` 
 
 **Struktur & Cara Kerja**  
 
-1. **`SaveIncomeStrategy`** (interface)  
-    ```java
-    public interface SaveIncomeStrategy {
-        /** Simpan objek Income, kembalikan true jika sukses */
-        boolean save(Income income);
-    }
-    ```
+1. **`SaveIncomeStrategy`** (interface)
+    - Simpan objek `Income`.
+    - Return `true` jika sukses.
 
 2. **`HibernateIncomeStrategy`** (implementasi utama)
-    ```java
-    public class HibernateIncomeStrategy implements SaveIncomeStrategy {
-        private final IncomeDao dao = new IncomeDao(HibernateUtil.getSessionFactory());
-        @Override
-        public boolean save(Income income) {
-            return dao.saveIncome(income);
-        }
-    }
-    ```
+    - Implementasi `save()` menggunakan `IncomeDao.saveIncome(...)`
 
 3. **`AddIncomeServlet`**
-    ```java
-    @WebServlet("/addIncome")
-    public class AddIncomeServlet extends HttpServlet {
-        private final SaveIncomeStrategy strategy = new HibernateIncomeStrategy();
-
-        @Override
-        protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-                throws ServletException, IOException {
-            HttpSession session = req.getSession(false);
-            User user = (User) session.getAttribute("loginUser");
-            // … baca form, bangun Income object …
-            boolean ok = strategy.save(in);
-            session.setAttribute("msg",     ok ? "Income added successfully" : "Failed to add income");
-            session.setAttribute("msgType", ok ? "success" : "danger");
-            resp.sendRedirect(req.getContextPath() + "/addIncome");
-        }
-    }
-    ```
+    - Memiliki field `private final SaveIncomeStrategy strategy = new HibernateIncomeStrategy();` sebagai strategy yang dipilih.
+    - `doPost()` melakukan:
+        - Baca parameter form → bangun objek `Income`
+        - Panggil `strategy.save(income)` → eksekusi penyimpanan sesuai strategi
+        - Simpan hasil (`ok`) ke flash‐message di session
+        - Redirect kembali ke `addIncome` (PRG)
+    - `doGet()` mengambil flash dari session ke request dan forward ke JSP.
 
 **Kelebihan**
 
