@@ -3,7 +3,7 @@
 ## Template Method Pattern (Expense)
 
 **Intent**  
-Template Method Pattern mendefinisikan kerangka alur proses di kelas abstrak (`AbstractExpenseServlet`), lalu me-defer (“memanggil hook”) langkah-langkah khusus ke subclass. Untuk operasi Expense (view, edit, delete) alur dasarnya sama:
+Template Method Pattern mendefinisikan kerangka alur proses di kelas abstrak (`AbstractExpenseServlet`), lalu memanggil hook langkah-langkah khusus ke subclass. Untuk operasi Expense (view, edit, delete) alur dasarnya sama:
 
 1. Cek login user  
 2. `preAction(req)` — hook baca parameter atau load data  
