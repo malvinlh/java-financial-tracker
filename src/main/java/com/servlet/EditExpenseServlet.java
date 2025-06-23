@@ -6,7 +6,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.entity.Expense;
-import com.entity.User;
 
 @WebServlet("/editExpense")
 public class EditExpenseServlet extends AbstractExpenseServlet {
@@ -14,14 +13,13 @@ public class EditExpenseServlet extends AbstractExpenseServlet {
     private Expense expense;
 
     @Override
-    protected void preAction(HttpServletRequest req)
-            throws ServletException {
-        // tidak lakukan apa‐apa di preAction—seluruhnya di dispatch()
+    protected void preAction(HttpServletRequest req) throws ServletException {
+        // nothing
     }
 
     @Override
     protected void doAction(HttpServletRequest req) {
-        // tidak ada: update dilakukan di dispatch()
+        // nothing
     }
 
     @Override
@@ -29,37 +27,32 @@ public class EditExpenseServlet extends AbstractExpenseServlet {
                             HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession(false);
-        User user = (User) session.getAttribute("loginUser");
-
         if ("POST".equalsIgnoreCase(req.getMethod())) {
-            // proses update
+            // Proses update
             int    id          = Integer.parseInt(req.getParameter("id"));
             String title       = req.getParameter("title");
             String date        = req.getParameter("date");
             String time        = req.getParameter("time");
             String description = req.getParameter("description");
-            String price       = req.getParameter("price");
+            double price       = Double.parseDouble(req.getParameter("price"));
 
-            expense = new Expense(title, date, time, description, price, user);
+            expense = new Expense(title, date, time, description, price);
             expense.setId(id);
 
             boolean ok = dao.updateExpense(expense);
+            HttpSession session = req.getSession();
             session.setAttribute("msg",
-                ok ? "Expense updated successfully" : "Failed to update expense");
+                ok ? "Expense edited successfully" : "Failed to edit expense");
             session.setAttribute("msgType", ok ? "success" : "danger");
 
-            // redirect kembali ke GET
-            resp.sendRedirect(req.getContextPath()
-                + "/editExpense?id=" + id);
+            resp.sendRedirect(req.getContextPath() + "/editExpense?id=" + id);
+
         } else {
-            // GET: load untuk prefill form
+            // GET: load data untuk prefill form
             int id = Integer.parseInt(req.getParameter("id"));
             expense = dao.getExpenseById(id);
 
-            // pindahkan flash yg sudah ada
-            carryFlash(req);
-
+            // carryFlash sudah dipanggil sebelum hook di template
             req.setAttribute("expense", expense);
             req.getRequestDispatcher("/user/edit_expense.jsp")
                .forward(req, resp);

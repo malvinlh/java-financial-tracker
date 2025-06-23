@@ -26,13 +26,9 @@ public class Expense {
     private String description;
 
     @Column(nullable = false)
-    private String price;
+    private double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    public Expense() { }
+    protected Expense() { }
 
     /**
      * Konstruktor lengkap.
@@ -42,15 +38,13 @@ public class Expense {
             String date,
             String time,
             String description,
-            String price,
-            User user
+            double price
     ) {
         this.title       = title;
         this.date        = date;
         this.time        = time;
         this.description = description;
         this.price       = price;
-        this.user        = user;
     }
 
     // --- getters & setters ---
@@ -70,11 +64,8 @@ public class Expense {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getPrice() { return price; }
-    public void setPrice(String price) { this.price = price; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
     @Override
     public String toString() {
@@ -85,7 +76,6 @@ public class Expense {
                ", time='" + time + '\'' +
                ", description='" + description + '\'' +
                ", price='" + price + '\'' +
-               ", user=" + (user != null ? user.getId() : "null") +
                '}';
     }
 }

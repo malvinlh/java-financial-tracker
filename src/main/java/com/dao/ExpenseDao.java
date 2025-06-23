@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import com.entity.Expense;
-import com.entity.User;
 
 /**
  * DAO untuk operasi CRUD pada entitas Expense.
@@ -43,12 +42,10 @@ public class ExpenseDao {
      * @param user user yang login
      * @return list Expense
      */
-    public List<Expense> getAllExpenseByUser(User user) {
-        try (Session session = factory.openSession()) {
-            String hql = "FROM Expense e WHERE e.user.id = :uid";
-            Query<Expense> q = session.createQuery(hql, Expense.class);
-            q.setParameter("uid", user.getId());
-            return q.list();
+    public List<Expense> getAllExpenses() {
+        try (Session s = factory.openSession()) {
+        Query<Expense> q = s.createQuery("FROM Expense", Expense.class);
+        return q.list();
         }
     }
 

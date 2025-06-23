@@ -5,8 +5,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import com.entity.User;
-
 @WebServlet("/deleteExpense")
 public class DeleteExpenseServlet extends AbstractExpenseServlet {
     private static final long serialVersionUID = 1L;
@@ -23,7 +21,7 @@ public class DeleteExpenseServlet extends AbstractExpenseServlet {
 
     @Override
     protected void doAction(HttpServletRequest req) {
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
         if (expenseId == null) {
             session.setAttribute("msg", "Invalid expense ID");
             session.setAttribute("msgType", "danger");
@@ -32,7 +30,7 @@ public class DeleteExpenseServlet extends AbstractExpenseServlet {
             session.setAttribute("msg",
                 ok ? "Expense deleted successfully"
                    : "Failed to delete expense");
-            session.setAttribute("msgType", ok ? "success" : "danger");
+            session.setAttribute("msgType", "danger");
         }
     }
 
@@ -40,17 +38,7 @@ public class DeleteExpenseServlet extends AbstractExpenseServlet {
     protected void dispatch(HttpServletRequest req,
                             HttpServletResponse resp)
             throws ServletException, IOException {
-        // 1) Bawa flash dari session → request
-        carryFlash(req);
-
-        // 2) Reload data dan simpan ke request
-        HttpSession session = req.getSession(false);
-        User user = (User) session.getAttribute("loginUser");
-        req.setAttribute("expenses",
-            dao.getAllExpenseByUser(user)
-        );
-
-        // 3) Forward ke JSP view
+        req.setAttribute("expenses", dao.getAllExpenses());
         req.getRequestDispatcher("/user/view_expense.jsp")
            .forward(req, resp);
     }

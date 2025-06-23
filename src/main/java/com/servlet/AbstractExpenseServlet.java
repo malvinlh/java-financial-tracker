@@ -8,7 +8,7 @@ import com.dao.ExpenseDao;
 import com.db.HibernateUtil;
 
 /**
- * Template Method untuk operasi Expense: proteksi, flash, dispatch.
+ * Template Method untuk operasi Expense: flash → preAction → doAction → carryFlash → dispatch
  */
 public abstract class AbstractExpenseServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -20,24 +20,16 @@ public abstract class AbstractExpenseServlet extends HttpServlet {
     protected final void doGet(HttpServletRequest req,
                                HttpServletResponse resp)
             throws ServletException, IOException {
-
-        // 1) Proteksi login
-        HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        // 2) Hook sebelum action utama (opsional)
+        // Hook sebelum action
         preAction(req);
 
-        // 3) Aksi utama (update/delete atau kosong untuk view)
+        // Aksi utama (save/update/delete atau kosong untuk view)
         doAction(req);
 
-        // 4) Carry flash message ke request
+        // Pindahkan flash (msg,msgType) dari session ke request
         carryFlash(req);
 
-        // 5) Dispatch: subclass yang handle forward/redirect
+        // Dispatch (forward/redirect)
         dispatch(req, resp);
     }
 
@@ -45,11 +37,9 @@ public abstract class AbstractExpenseServlet extends HttpServlet {
     protected final void doPost(HttpServletRequest req,
                                 HttpServletResponse resp)
             throws ServletException, IOException {
-        // Kirim POST ke doGet agar template‐flow sama
         doGet(req, resp);
     }
 
-    /** Pindahkan flash (msg,msgType) dari session ke request, lalu hapus */
     protected void carryFlash(HttpServletRequest req) {
         HttpSession session = req.getSession(false);
         if (session != null) {
@@ -68,7 +58,7 @@ public abstract class AbstractExpenseServlet extends HttpServlet {
     protected abstract void preAction(HttpServletRequest req)
             throws ServletException;
 
-    /** Hook: lakukan operasi utama (delete/update) */
+    /** Hook: lakukan operasi utama (save/update/delete/view) */
     protected abstract void doAction(HttpServletRequest req);
 
     /** Hook: forward atau redirect */
