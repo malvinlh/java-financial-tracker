@@ -5,7 +5,8 @@ import com.entity.Income;
 /**
  * Strategy interface untuk menyimpan Income.
  */
-public interface SaveIncomeStrategy {
+public interface SaveIncomeStrategy
+{
     /**
      * Simpan objek Income.
      * @param income Income yang akan disimpan

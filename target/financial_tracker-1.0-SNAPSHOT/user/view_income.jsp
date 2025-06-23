@@ -1,102 +1,57 @@
 <%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"
-         isELIgnored="false" %>
-<%@ page import="com.entity.User" %>
+         pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ page import="com.db.HibernateUtil, com.dao.IncomeDao, com.entity.Income, java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
           prefix="c" %>
 <%
-    User loginUser = (User) session.getAttribute("loginUser");
-    if (loginUser == null) {
-        response.sendRedirect(request.getContextPath()
-                              + "/login.jsp");
-        return;
-    }
+  IncomeDao dao = new IncomeDao(HibernateUtil.getSessionFactory());
+  List<Income> incomes = dao.getAllIncomes();
+  request.setAttribute("incomes", incomes);
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Your Incomes</title>
+    <title>Income List</title>
     <%@ include file="/component/all_css.jsp" %>
-    <style>
-      .card-sh { box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1); }
-    </style>
+    <style>.card-sh { box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1); }</style>
 </head>
 <body class="bg-light">
   <%@ include file="/component/navbar.jsp" %>
-
   <div class="container py-5">
-
-    <!-- Flash message -->
-    <c:if test="${not empty msg}">
-      <div class="alert alert-${msgType}
-                  alert-dismissible fade show"
-           role="alert">
-        ${msg}
-        <button type="button" class="btn-close"
-                data-bs-dismiss="alert"></button>
-      </div>
-    </c:if>
-
-    <div class="card card-sh">
-      <div class="card-header text-center">
-        <h4 class="mb-0">Your Incomes</h4>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-bordered
-                        table-striped table-hover mb-0">
-            <thead class="table-light">
+    <h4 class="mb-4">Income List</h4>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>#</th><th>Title</th><th>Description</th>
+            <th>Date</th><th>Time</th><th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <c:choose>
+            <c:when test="${not empty incomes}">
+              <c:forEach var="inc" items="${incomes}" varStatus="st">
+                <tr>
+                  <td>${st.index + 1}</td>
+                  <td>${inc.title}</td>
+                  <td>${inc.description}</td>
+                  <td>${inc.date}</td>
+                  <td>${inc.time}</td>
+                  <td>${inc.amount}</td>
+                </tr>
+              </c:forEach>
+            </c:when>
+            <c:otherwise>
               <tr>
-                <th>#</th><th>Title</th>
-                <th>Description</th><th>Date</th>
-                <th>Time</th><th>Amount</th>
-                <th>Action</th>
+                <td colspan="6" class="text-center">No income found.</td>
               </tr>
-            </thead>
-            <tbody>
-              <c:choose>
-                <c:when test="${not empty requestScope.incomes}">
-                  <c:forEach var="inc" items="${requestScope.incomes}"
-                             varStatus="st">
-                    <tr>
-                      <th scope="row">${st.index + 1}</th>
-                      <td><c:out value="${inc.title}"/></td>
-                      <td><c:out value="${inc.description}"/></td>
-                      <td><c:out value="${inc.date}"/></td>
-                      <td><c:out value="${inc.time}"/></td>
-                      <td><c:out value="${inc.amount}"/></td>
-                      <td>
-                        <a href="<c:url value='/editIncome?id=${inc.id}'/>"
-                           class="btn btn-sm btn-primary me-1">
-                          Edit
-                        </a>
-                        <a href="<c:url value='/deleteIncome?id=${inc.id}'/>"
-                           class="btn btn-sm btn-danger">
-                          Delete
-                        </a>
-                      </td>
-                    </tr>
-                  </c:forEach>
-                </c:when>
-                <c:otherwise>
-                  <tr>
-                    <td colspan="7"
-                        class="text-center py-4">
-                      No incomes found.
-                    </td>
-                  </tr>
-                </c:otherwise>
-              </c:choose>
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </c:otherwise>
+          </c:choose>
+        </tbody>
+      </table>
     </div>
-
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

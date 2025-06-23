@@ -5,10 +5,10 @@ import com.db.HibernateUtil;
 import com.entity.Income;
 
 /**
- * Strategy yang menggunakan Hibernate/DAO untuk menyimpan Income.
+ * Concrete Strategy menggunakan Hibernate/DAO.
  */
-public class HibernateIncomeStrategy implements SaveIncomeStrategy {
-
+public class HibernateIncomeStrategy implements SaveIncomeStrategy
+{
     private final IncomeDao dao;
 
     public HibernateIncomeStrategy() {

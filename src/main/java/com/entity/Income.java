@@ -7,9 +7,9 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(name = "income")
-public class Income {
-
-    @Id
+public class Income
+{
+    @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -28,29 +28,21 @@ public class Income {
     @Column(nullable = false)
     private double amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    public Income() { }
+    protected Income() { }
 
     /**
-     * Konstruktor lengkap.
+     * Konstruktor lengkap tanpa user.
      */
-    public Income(
-            String title,
-            String date,
-            String time,
-            String description,
-            double amount,
-            User user
-    ) {
+    public Income(String title,
+                  String date,
+                  String time,
+                  String description,
+                  double amount) {
         this.title       = title;
         this.date        = date;
         this.time        = time;
         this.description = description;
         this.amount      = amount;
-        this.user        = user;
     }
 
     // --- getters & setters ---
@@ -73,9 +65,6 @@ public class Income {
     public double getAmount() { return amount; }
     public void setAmount(double amount) { this.amount = amount; }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
     @Override
     public String toString() {
         return "Income{" +
@@ -85,7 +74,6 @@ public class Income {
                ", time='" + time + '\'' +
                ", description='" + description + '\'' +
                ", amount=" + amount +
-               ", user=" + (user != null ? user.getId() : "null") +
                '}';
     }
 }

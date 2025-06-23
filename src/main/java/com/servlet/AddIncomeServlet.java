@@ -6,28 +6,22 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.entity.Income;
-import com.entity.User;
 import com.strategy.HibernateIncomeStrategy;
 import com.strategy.SaveIncomeStrategy;
 
 @WebServlet("/addIncome")
-public class AddIncomeServlet extends HttpServlet {
+public class AddIncomeServlet extends HttpServlet
+{
     private static final long serialVersionUID = 1L;
 
-    // Pilih strategy yang diinginkan:
+    // Strategy disembunyikan sebagai private final
     private final SaveIncomeStrategy strategy = new HibernateIncomeStrategy();
 
     @Override
     protected void doGet(HttpServletRequest req,
                          HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        // Ambil flash dari session → request
+        HttpSession session = req.getSession();
         String msg     = (String) session.getAttribute("msg");
         String msgType = (String) session.getAttribute("msgType");
         if (msg != null) {
@@ -36,7 +30,6 @@ public class AddIncomeServlet extends HttpServlet {
             session.removeAttribute("msg");
             session.removeAttribute("msgType");
         }
-
         req.getRequestDispatcher("/user/add_income.jsp")
            .forward(req, resp);
     }
@@ -45,33 +38,19 @@ public class AddIncomeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req,
                           HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        User user = (session != null)
-                  ? (User) session.getAttribute("loginUser")
-                  : null;
-        if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        // 1) Baca parameter form
         String title       = req.getParameter("title");
         String date        = req.getParameter("date");
         String time        = req.getParameter("time");
         String description = req.getParameter("description");
         double amount      = Double.parseDouble(req.getParameter("amount"));
 
-        // 2) Buat objek Income
-        Income in = new Income(title, date, time, description, amount, user);
-
-        // 3) Simpan dengan strategy
+        Income in = new Income(title, date, time, description, amount);
         boolean ok = strategy.save(in);
 
-        // 4) Set flash-message
-        session.setAttribute("msg",     ok ? "Income added successfully"  : "Failed to add income");
-        session.setAttribute("msgType", ok ? "success" : "danger");
+        HttpSession session = req.getSession();
+        session.setAttribute("msg",     ok ? "Income added successfully" : "Failed to add income");
+        session.setAttribute("msgType", ok ? "success"                 : "danger");
 
-        // 5) Redirect kembali ke form Add Income (PRG)
         resp.sendRedirect(req.getContextPath() + "/addIncome");
     }
 }
