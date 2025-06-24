@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
   <div class="container-fluid">
-    <a class="navbar-brand" href="<c:url value='/index.jsp'/>">
+    <a class="navbar-brand" href="<c:url value='/user/home.jsp'/>">
       <i class="fa-solid fa-money-check"></i> Financial Tracker
     </a>
     <button class="navbar-toggler" type="button"
@@ -14,7 +14,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active"
-             href="<c:url value='/index.jsp'/>">
+             href="<c:url value='/user/home.jsp'/>">
             <i class="fa-solid fa-house"></i> Home
           </a>
         </li>
@@ -22,30 +22,6 @@
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <c:choose>
           <c:when test="${not empty sessionScope.loginUser}">
-            <li class="nav-item">
-              <a class="nav-link" 
-                 href="<c:url value='/addIncome'/>">
-                <i class="fa-solid fa-wallet me-1"></i> Add Income
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" 
-                 href="<c:url value='/viewIncome'/>">
-                <i class="fa-solid fa-chart-line me-1"></i> View Income
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link"
-                 href="<c:url value='/addExpense'/>">
-                <i class="fa-solid fa-plus"></i> Add Expense
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link"
-                 href="<c:url value='/viewExpense'/>">
-                <i class="fa-solid fa-eye"></i> View Expenses
-              </a>
-            </li>
             <li class="nav-item">
               <a class="nav-link"
                  href="<c:url value='/user/home.jsp'/>">

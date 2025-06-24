@@ -11,7 +11,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>User Home</title>
+  <title>Financial Tracker Home</title>
   <%@ include file="/component/all_css.jsp" %>
   <style>
     .hero-section {
@@ -41,16 +41,6 @@
       box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1);
       padding: 2.5rem;
     }
-    .btn-rows {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .btn-rows:last-child {
-      margin-bottom: 0;
-    }
   </style>
 </head>
 <body class="bg-light">
@@ -60,31 +50,42 @@
     <div class="hero-bg"></div>
 
     <div class="hero-card text-center">
-      <h1 class="display-4 mb-3">
-        Welcome, <c:out value="${sessionScope.loginUser.fullname}"/>!
-      </h1>
-      <p class="lead mb-4">You have successfully logged in.</p>
+      <h1 class="display-4 mb-3">Welcome to Financial Tracker!</h1>
+      <p class="lead mb-4">Track Your Income and Expense at Ease.</p>
 
-      <div class="btn-rows">
-        <a href="<c:url value='/addExpense'/>"
-           class="btn btn-primary btn-lg px-4">
-          <i class="fa-solid fa-plus me-2"></i>Add Expense
-        </a>
-        <a href="<c:url value='/viewExpense'/>"
-           class="btn btn-outline-primary btn-lg px-4">
-          <i class="fa-solid fa-eye me-2"></i>View Expenses
-        </a>
-      </div>
-
-      <div class="btn-rows">
-        <a href="<c:url value='/addIncome'/>"
-           class="btn btn-success btn-lg px-4">
-          <i class="fa-solid fa-wallet me-2"></i>Add Income
-        </a>
-        <a href="<c:url value='/viewIncome'/>"
-           class="btn btn-outline-success btn-lg px-4">
-          <i class="fa-solid fa-chart-line me-2"></i>View Income
-        </a>
+      <div class="row row-cols-2 g-3 mb-4 justify-content-center">
+        <!-- Add Income -->
+        <div class="col">
+          <a href="<c:url value='/addIncome'/>"
+             class="btn btn-success btn-lg w-100">
+            <i class="fa-solid fa-wallet me-2"></i>Add Income
+          </a>
+        </div>
+        <!-- View Income -->
+        <div class="col">
+          <a href="<c:url value='/viewIncome'/>"
+             class="btn btn-outline-success btn-lg w-100">
+            <i class="fa-solid fa-chart-line me-2"></i>View Income
+          </a>
+        </div>
+        <!-- Add Expense -->
+        <div class="col">
+          <a class="btn btn-danger btn-lg w-100"
+             href="<c:url value='/addExpense'/>"
+             tabindex="-1"
+             aria-disabled="true">
+            <i class="fa-solid fa-plus me-2"></i>Add Expense
+          </a>
+        </div>
+        <!-- View Expense -->
+        <div class="col">
+          <a class="btn btn-outline-danger btn-lg w-100"
+             href="<c:url value='/viewExpense'/>"
+             tabindex="-1"
+             aria-disabled="true">
+            <i class="fa-solid fa-eye me-2"></i>View Expenses
+          </a>
+        </div>
       </div>
     </div>
   </section>
